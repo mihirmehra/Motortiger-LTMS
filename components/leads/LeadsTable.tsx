@@ -99,9 +99,11 @@ export default function LeadsTable({
     .sort((a, b) => {
       const aVal = a[sortField];
       const bVal = b[sortField];
-      
+
       if (aVal === bVal) return 0;
-      
+      if (aVal === undefined) return sortDirection === 'asc' ? -1 : 1;
+      if (bVal === undefined) return sortDirection === 'asc' ? 1 : -1;
+
       const comparison = aVal > bVal ? 1 : -1;
       return sortDirection === 'asc' ? comparison : -comparison;
     });
@@ -307,8 +309,8 @@ export default function LeadsTable({
                       }
                     </TableCell>
                     <TableCell>
-                      {typeof lead.createdBy === 'object' && lead.createdBy?.name 
-                        ? lead.createdBy.name 
+                      {typeof lead.createdBy === 'object'
+                        ? lead.createdBy?.name || '-'
                         : lead.createdBy || '-'
                       }
                     </TableCell>
