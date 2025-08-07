@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       user: userResponse
     }, { status: 201 });
 
-  } catch (error) {
+  } catch (error:any) {
     console.error('Registration error:', error);
     
     if (error.code === 11000) {
