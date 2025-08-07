@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     const to = new Date(searchParams.get('to') || new Date());
     const format = searchParams.get('format') || 'csv';
 
-    let leadQuery = {
+    let leadQuery: any = {
       createdAt: { $gte: from, $lte: to }
     };
 
