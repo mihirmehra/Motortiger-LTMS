@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ preview: previewData });
     }
 
-    const results = {
+    const results: { success: number; failed: number; errors: string[] } = {
       success: 0,
       failed: 0,
       errors: []
@@ -183,7 +183,7 @@ export async function POST(request: NextRequest) {
         results.success++;
       } catch (error) {
         results.failed++;
-        results.errors.push(`Row ${rowNumber}: ${error.message}`);
+        results.errors.push(`Row ${rowNumber}: ${(error instanceof Error ? error.message : String(error))}`);
       }
     }
 
