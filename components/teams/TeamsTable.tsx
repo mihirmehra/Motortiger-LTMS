@@ -119,7 +119,7 @@ export default function TeamsTable({
       } else {
         alert('Failed to delete team');
       }
-    } catch (error) {
+    } catch (error:any) {
       alert('Error deleting team');
     }
   };

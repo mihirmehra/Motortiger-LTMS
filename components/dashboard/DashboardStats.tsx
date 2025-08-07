@@ -41,7 +41,7 @@ export default function DashboardStats({ userRole }: DashboardStatsProps) {
       } else {
         console.error('Failed to fetch stats:', response.status, response.statusText);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching stats:', error);
     }
   };

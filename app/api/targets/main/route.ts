@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       percentage
     };
     return NextResponse.json(mainTarget);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching main target:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

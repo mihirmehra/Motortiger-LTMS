@@ -59,7 +59,7 @@ export default function AddTargetModal({ isOpen, onClose, onSuccess }: AddTarget
         const data = await response.json();
         setError(data.message || 'Failed to create target');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

@@ -60,7 +60,7 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         const data = await response.json();
         setUsers(data);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching users:', error);
     }
   };
@@ -102,7 +102,7 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         const data = await response.json();
         setError(data.message || 'Failed to create lead');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

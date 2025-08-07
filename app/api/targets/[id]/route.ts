@@ -32,7 +32,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     return NextResponse.json(updatedTarget);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error updating target:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
@@ -62,7 +62,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     }
 
     return NextResponse.json({ message: 'Target deleted successfully' });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error deleting target:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

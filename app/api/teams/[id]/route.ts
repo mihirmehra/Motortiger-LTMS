@@ -65,7 +65,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       );
     }
     return NextResponse.json(updatedTeam);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error updating team:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
@@ -108,7 +108,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     await Team.findByIdAndDelete(teamId);
 
     return NextResponse.json({ message: 'Team deleted successfully' });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error deleting team:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

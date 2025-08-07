@@ -85,7 +85,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     return NextResponse.json(updatedLead);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error updating lead:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
@@ -122,7 +122,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     await Lead.findByIdAndDelete(leadId);
 
     return NextResponse.json({ message: 'Lead deleted successfully' });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error deleting lead:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

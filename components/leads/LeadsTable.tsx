@@ -141,7 +141,7 @@ export default function LeadsTable({
       } else {
         alert('Failed to delete lead');
       }
-    } catch (error) {
+    } catch (error:any) {
       alert('Error deleting lead');
     }
   };

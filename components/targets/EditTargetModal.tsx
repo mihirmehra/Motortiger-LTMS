@@ -79,7 +79,7 @@ export default function EditTargetModal({ isOpen, onClose, onSuccess, target }: 
         const data = await response.json();
         setError(data.message || 'Failed to update target');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

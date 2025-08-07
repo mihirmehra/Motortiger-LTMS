@@ -69,7 +69,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       } else {
         console.error('Failed to fetch main target:', response.status, response.statusText);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching main target:', error);
     }
   };

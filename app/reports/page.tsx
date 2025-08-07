@@ -37,7 +37,7 @@ export default function ReportsPage() {
         const data = await response.json();
         setReportData(data);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching report data:', error);
     } finally {
       setIsLoading(false);

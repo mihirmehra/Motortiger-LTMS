@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     };
 
     return NextResponse.json(stats);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching user stats:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

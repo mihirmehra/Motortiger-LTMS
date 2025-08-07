@@ -83,7 +83,7 @@ export default function ImportLeadsModal({ isOpen, onClose, onSuccess }: ImportL
       } else {
         setError(data.message || 'Preview failed');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);
@@ -121,7 +121,7 @@ export default function ImportLeadsModal({ isOpen, onClose, onSuccess }: ImportL
       } else {
         setError(data.message || 'Import failed');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

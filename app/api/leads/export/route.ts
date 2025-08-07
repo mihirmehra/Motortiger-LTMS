@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
         'Content-Disposition': `attachment; filename="leads-${new Date().toISOString().split('T')[0]}.csv"`
       }
     });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error exporting leads:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

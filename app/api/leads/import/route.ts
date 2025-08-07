@@ -181,14 +181,14 @@ export async function POST(request: NextRequest) {
 
         await newLead.save();
         results.success++;
-      } catch (error) {
+      } catch (error:any) {
         results.failed++;
         results.errors.push(`Row ${rowNumber}: ${(error instanceof Error ? error.message : String(error))}`);
       }
     }
 
     return NextResponse.json(results);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error importing leads:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

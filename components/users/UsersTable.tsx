@@ -117,7 +117,7 @@ export default function UsersTable({
       } else {
         alert('Failed to delete user');
       }
-    } catch (error) {
+    } catch (error:any) {
       alert('Error deleting user');
     }
   };
@@ -138,7 +138,7 @@ export default function UsersTable({
       } else {
         alert('Failed to update user status');
       }
-    } catch (error) {
+    } catch (error:any) {
       alert('Error updating user status');
     }
   };

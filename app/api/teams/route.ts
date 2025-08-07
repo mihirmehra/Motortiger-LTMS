@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       .sort({ createdAt: -1 });
 
     return NextResponse.json(teams);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching teams:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     await newTeam.populate('createdBy', 'name email');
 
     return NextResponse.json(newTeam, { status: 201 });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error creating team:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

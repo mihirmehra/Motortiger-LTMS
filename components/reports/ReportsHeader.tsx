@@ -47,7 +47,7 @@ export default function ReportsHeader({ dateRange, onDateRangeChange }: ReportsH
           targetAchievement: 72 // This would come from target calculation
         });
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching report stats:', error);
     }
   };

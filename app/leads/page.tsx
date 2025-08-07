@@ -32,7 +32,7 @@ export default function LeadsPage() {
       } else {
         console.error('Failed to fetch leads:', response.status, response.statusText);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching leads:', error);
     } finally {
       setIsLoading(false);

@@ -30,7 +30,7 @@ export default function UsersPage() {
         const data = await response.json();
         setUsers(data);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching users:', error);
     } finally {
       setIsLoading(false);

@@ -100,7 +100,7 @@ export default function TargetsTable({ targets, isLoading, onTargetUpdate }: Tar
       } else {
         alert('Failed to delete target');
       }
-    } catch (error) {
+    } catch (error:any) {
       alert('Error deleting target');
     }
   };

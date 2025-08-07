@@ -30,7 +30,7 @@ export default function TeamsPage() {
         const data = await response.json();
         setTeams(data);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching teams:', error);
     } finally {
       setIsLoading(false);

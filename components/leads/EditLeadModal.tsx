@@ -85,7 +85,7 @@ export default function EditLeadModal({ isOpen, onClose, onSuccess, lead }: Edit
         const data = await response.json();
         setUsers(data);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching users:', error);
     }
   };
@@ -118,7 +118,7 @@ export default function EditLeadModal({ isOpen, onClose, onSuccess, lead }: Edit
         const data = await response.json();
         setError(data.message || 'Failed to update lead');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

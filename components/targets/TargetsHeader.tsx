@@ -35,7 +35,7 @@ export default function TargetsHeader({ onAddTarget }: TargetsHeaderProps) {
           progress: data.percentage || 0
         });
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching target stats:', error);
     }
   };

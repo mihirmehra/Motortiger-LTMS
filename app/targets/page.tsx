@@ -30,7 +30,7 @@ export default function TargetsPage() {
         const data = await response.json();
         setTargets(data);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching targets:', error);
     } finally {
       setIsLoading(false);

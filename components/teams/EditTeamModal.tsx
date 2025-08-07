@@ -77,7 +77,7 @@ export default function EditTeamModal({ isOpen, onClose, onSuccess, team }: Edit
         const managerUsers = data.filter(user => ['admin', 'manager'].includes(user.role));
         setManagers(managerUsers);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching managers:', error);
     }
   };
@@ -105,7 +105,7 @@ export default function EditTeamModal({ isOpen, onClose, onSuccess, team }: Edit
         const data = await response.json();
         setError(data.message || 'Failed to update team');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

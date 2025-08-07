@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       .sort({ date: -1 });
 
     return NextResponse.json(targets);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching targets:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     await newTarget.populate('createdBy', 'name email');
 
     return NextResponse.json(newTarget, { status: 201 });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error creating target:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

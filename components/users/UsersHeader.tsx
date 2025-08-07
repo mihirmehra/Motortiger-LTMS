@@ -31,7 +31,7 @@ export default function UsersHeader({ onAddUser }: UsersHeaderProps) {
         const data = await response.json();
         setStats(data);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching user stats:', error);
     }
   };

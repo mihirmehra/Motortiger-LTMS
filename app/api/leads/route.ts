@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
       .sort({ createdAt: -1 });
 
     return NextResponse.json(leads);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching leads:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     await newLead.populate('createdBy', 'name email');
 
     return NextResponse.json(newLead, { status: 201 });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error creating lead:', error);
     
     if (error.code === 11000) {

@@ -61,7 +61,7 @@ export default function ManageTeamMembersModal({ isOpen, onClose, onSuccess, tea
         );
         setAvailableUsers(availableAgents);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching available users:', error);
     }
   };
@@ -95,7 +95,7 @@ export default function ManageTeamMembersModal({ isOpen, onClose, onSuccess, tea
         const data = await response.json();
         setError(data.message || 'Failed to add member');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);
@@ -130,7 +130,7 @@ export default function ManageTeamMembersModal({ isOpen, onClose, onSuccess, tea
         const data = await response.json();
         setError(data.message || 'Failed to remove member');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

@@ -51,7 +51,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
         const data = await response.json();
         setTeams(data);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching teams:', error);
     }
   };
@@ -87,7 +87,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
         const data = await response.json();
         setError(data.message || 'Failed to create user');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

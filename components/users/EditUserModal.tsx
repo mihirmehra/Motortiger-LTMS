@@ -76,7 +76,7 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user }: Edit
         const data = await response.json();
         setTeams(data);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching teams:', error);
     }
   };
@@ -108,7 +108,7 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user }: Edit
         const data = await response.json();
         setError(data.message || 'Failed to update user');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

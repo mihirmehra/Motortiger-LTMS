@@ -73,7 +73,7 @@ export default function SendEmailModal({ isOpen, onClose, onSuccess, lead }: Sen
         const data = await response.json();
         setError(data.message || 'Failed to send email');
       }
-    } catch (error) {
+    } catch (error:any) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

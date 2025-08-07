@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
       targetProgress
     };
     return NextResponse.json(stats);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching dashboard stats:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

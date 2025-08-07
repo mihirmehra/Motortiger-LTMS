@@ -34,7 +34,7 @@ export default function RecentActivities() {
       } else {
         console.error('Failed to fetch activities:', response.status, response.statusText);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error fetching activities:', error);
       // Set empty activities on error
       setActivities([]);

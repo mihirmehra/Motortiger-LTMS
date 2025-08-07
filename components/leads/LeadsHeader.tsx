@@ -60,7 +60,7 @@ export default function LeadsHeader({
       } else {
         alert('Export failed');
       }
-    } catch (error) {
+    } catch (error:any) {
       alert('Export error');
     } finally {
       setIsExporting(false);

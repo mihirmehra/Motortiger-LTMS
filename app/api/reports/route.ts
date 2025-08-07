@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
     };
 
     return NextResponse.json(reportData);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching report data:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
