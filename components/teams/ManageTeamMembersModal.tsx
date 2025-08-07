@@ -56,7 +56,7 @@ export default function ManageTeamMembersModal({ isOpen, onClose, onSuccess, tea
         const data = await response.json();
         // Filter to show only agents not already in the team
         const currentMemberIds = team?.members.map(member => member._id) || [];
-        const availableAgents = data.filter(user => 
+        const availableAgents = data.filter((user: { _id: string; name: string; email: string; role: string }) => 
           user.role === 'agent' && !currentMemberIds.includes(user._id)
         );
         setAvailableUsers(availableAgents);

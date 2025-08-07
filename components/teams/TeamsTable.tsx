@@ -77,9 +77,12 @@ export default function TeamsTable({
   const sortedTeams = [...teams].sort((a, b) => {
     const aVal = a[sortField];
     const bVal = b[sortField];
-    
+
     if (aVal === bVal) return 0;
-    
+
+    if (aVal === undefined) return sortDirection === 'asc' ? -1 : 1;
+    if (bVal === undefined) return sortDirection === 'asc' ? 1 : -1;
+
     const comparison = aVal > bVal ? 1 : -1;
     return sortDirection === 'asc' ? comparison : -comparison;
   });

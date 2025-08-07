@@ -74,7 +74,7 @@ export default function EditTeamModal({ isOpen, onClose, onSuccess, team }: Edit
       });
       if (response.ok) {
         const data = await response.json();
-        const managerUsers = data.filter(user => ['admin', 'manager'].includes(user.role));
+        const managerUsers = data.filter((user: { role: string }) => ['admin', 'manager'].includes(user.role));
         setManagers(managerUsers);
       }
     } catch (error:any) {
