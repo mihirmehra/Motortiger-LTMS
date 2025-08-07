@@ -43,7 +43,7 @@ export default function EditLeadModal({ isOpen, onClose, onSuccess, lead }: Edit
     productPrice: '',
     salePrice: '',
     source: '',
-    status: 'new' as const,
+    status: 'new' as Lead['status'],
     assignedTo: ''
   });
   const [users, setUsers] = useState<Array<{ _id: string; name: string; email: string }>>([]);
