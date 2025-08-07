@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const from = new Date(searchParams.get('from') || new Date(new Date().getFullYear(), new Date().getMonth(), 1));
     const to = new Date(searchParams.get('to') || new Date());
 
-    let leadQuery = {
+    let leadQuery: Record<string, any> = {
       createdAt: { $gte: from, $lte: to }
     };
 
