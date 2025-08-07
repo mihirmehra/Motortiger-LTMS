@@ -2,30 +2,87 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+} from 'recharts';
+
+// --- Types ---
+interface Lead {
+  createdAt: string;
+  status: 'new' | 'in-progress' | 'sold' | 'lost' | string;
+  // Add other fields as needed
+}
+
+interface Target {
+  date: string;
+  amount: number;
+  achieved: number;
+}
+
+interface ReportsChartsData {
+  leads: Lead[];
+  targets: Target[];
+}
 
 interface ReportsChartsProps {
-  data: any;
+  data: ReportsChartsData;
   isLoading: boolean;
 }
 
+interface LeadsDataItem {
+  month: string;
+  leads: number;
+  sales: number;
+}
+
+interface StatusDataItem {
+  name: string;
+  value: number;
+  color: string;
+}
+
+interface TargetDataItem {
+  date: string;
+  target: number;
+  achieved: number;
+}
+
+interface ChartData {
+  leadsData: LeadsDataItem[];
+  statusData: StatusDataItem[];
+  targetData: TargetDataItem[];
+}
+
+// --- Component ---
 export default function ReportsCharts({ data, isLoading }: ReportsChartsProps) {
-  const [chartData, setChartData] = useState({
+  const [chartData, setChartData] = useState<ChartData>({
     leadsData: [],
     statusData: [],
-    targetData: []
+    targetData: [],
   });
 
   useEffect(() => {
     if (data && data.leads) {
       processChartData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const processChartData = () => {
     // Process leads by month
-    const monthlyData = {};
-    data.leads.forEach(lead => {
+    const monthlyData: Record<string, LeadsDataItem> = {};
+    data.leads.forEach((lead) => {
       const month = new Date(lead.createdAt).toLocaleDateString('en-US', { month: 'short' });
       if (!monthlyData[month]) {
         monthlyData[month] = { month, leads: 0, sales: 0 };
@@ -37,33 +94,32 @@ export default function ReportsCharts({ data, isLoading }: ReportsChartsProps) {
     });
 
     // Process status distribution
-    const statusCounts = {};
-    data.leads.forEach(lead => {
+    const statusCounts: Record<string, number> = {};
+    data.leads.forEach((lead) => {
       statusCounts[lead.status] = (statusCounts[lead.status] || 0) + 1;
     });
 
-    const statusData = [
-      { name: 'New', value: statusCounts.new || 0, color: '#3B82F6' },
+    const statusData: StatusDataItem[] = [
+      { name: 'New', value: statusCounts['new'] || 0, color: '#3B82F6' },
       { name: 'In Progress', value: statusCounts['in-progress'] || 0, color: '#F59E0B' },
-      { name: 'Sold', value: statusCounts.sold || 0, color: '#10B981' },
-      { name: 'Lost', value: statusCounts.lost || 0, color: '#EF4444' },
+      { name: 'Sold', value: statusCounts['sold'] || 0, color: '#10B981' },
+      { name: 'Lost', value: statusCounts['lost'] || 0, color: '#EF4444' },
     ];
 
     // Process target data
-    const targetData = data.targets.map(target => ({
+    const targetData: TargetDataItem[] = (data.targets || []).map((target) => ({
       date: target.date,
       target: target.amount,
-      achieved: target.achieved
+      achieved: target.achieved,
     }));
 
     setChartData({
       leadsData: Object.values(monthlyData),
       statusData,
-      targetData
+      targetData,
     });
   };
 
-  // Mock data for charts
   const leadsData = chartData.leadsData;
   const statusData = chartData.statusData;
   const targetData = chartData.targetData;
@@ -139,9 +195,9 @@ export default function ReportsCharts({ data, isLoading }: ReportsChartsProps) {
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={targetData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" tickFormatter={(value) => new Date(value).toLocaleDateString()} />
+              <XAxis dataKey="date" tickFormatter={(value: string) => new Date(value).toLocaleDateString()} />
               <YAxis />
-              <Tooltip labelFormatter={(value) => new Date(value).toLocaleDateString()} />
+              <Tooltip labelFormatter={(value: string) => new Date(value).toLocaleDateString()} />
               <Line type="monotone" dataKey="target" stroke="#EF4444" name="Target" strokeDasharray="5 5" />
               <Line type="monotone" dataKey="achieved" stroke="#10B981" name="Achieved" />
             </LineChart>
@@ -159,7 +215,7 @@ export default function ReportsCharts({ data, isLoading }: ReportsChartsProps) {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
-              <Tooltip formatter={(value) => [`$${value * 1000}`, 'Revenue']} />
+              <Tooltip formatter={(value: number) => [`$${value * 1000}`, 'Revenue']} />
               <Bar dataKey="sales" fill="#F59E0B" name="Revenue" />
             </BarChart>
           </ResponsiveContainer>
