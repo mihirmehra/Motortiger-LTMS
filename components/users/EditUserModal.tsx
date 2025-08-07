@@ -39,10 +39,16 @@ interface EditUserModalProps {
 }
 
 export default function EditUserModal({ isOpen, onClose, onSuccess, user }: EditUserModalProps) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    email: string;
+    role: 'admin' | 'manager' | 'agent';
+    isActive: boolean;
+    team: string;
+  }>({
     name: '',
     email: '',
-    role: 'agent' as const,
+    role: 'agent',
     isActive: true,
     team: ''
   });
@@ -95,7 +101,6 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user }: Edit
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('auth-token')}`
         },
-        body: JSON.stringify(formData),
         body: JSON.stringify({
           ...formData,
           team: formData.team === 'no-team' ? null : formData.team

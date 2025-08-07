@@ -27,13 +27,20 @@ interface User {
   email: string;
   role: 'admin' | 'manager' | 'agent';
   isActive: boolean;
-  team?: string;
+  team?: string | { name: string };
   createdBy?: {
     _id: string;
     name: string;
     email: string;
   };
   createdAt: string;
+}
+
+interface EditUserModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+  user: User | null;
 }
 
 interface UsersTableProps {
@@ -77,12 +84,16 @@ export default function UsersTable({
     );
   };
 
+
   const sortedUsers = [...users].sort((a, b) => {
     const aVal = a[sortField];
     const bVal = b[sortField];
-    
+
     if (aVal === bVal) return 0;
-    
+
+    if (aVal === undefined) return sortDirection === 'asc' ? -1 : 1;
+    if (bVal === undefined) return sortDirection === 'asc' ? 1 : -1;
+
     const comparison = aVal > bVal ? 1 : -1;
     return sortDirection === 'asc' ? comparison : -comparison;
   });
@@ -324,7 +335,7 @@ export default function UsersTable({
           setEditUser(null);
         }}
         onSuccess={handleEditSuccess}
-        user={editUser}
+        user={editUser as any}
       />
     </>
   );
