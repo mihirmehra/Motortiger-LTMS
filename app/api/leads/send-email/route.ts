@@ -6,6 +6,16 @@ import { sendEmail, emailTemplates } from '@/lib/email/emailService';
 
 export const dynamic = 'force-dynamic';
 
+// Define the allowed template types based on your emailTemplates object
+type EmailTemplateType = keyof typeof emailTemplates;
+
+interface RequestBody {
+  leadId: string;
+  templateType?: EmailTemplateType;
+  customSubject?: string;
+  customContent?: string;
+}
+
 export async function POST(request: NextRequest) {
   const user = await authenticateUser(request);
   if (!user) {
@@ -18,8 +28,8 @@ export async function POST(request: NextRequest) {
 
   try {
     await connectDB();
-    
-    const { leadId, templateType, customSubject, customContent } = await request.json();
+
+    const { leadId, templateType, customSubject, customContent } = await request.json() as RequestBody;
 
     const lead = await Lead.findById(leadId);
     if (!lead) {
@@ -31,14 +41,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
     }
 
-    let emailContent;
-    
-    if (templateType && emailTemplates[templateType]) {
-      emailContent = emailTemplates[templateType](
-        lead.customerName,
-        lead.productName,
-        user.name
-      );
+    let emailContent: { subject: string; html: string; text: string };
+
+    if (templateType && templateType in emailTemplates) {
+      // Handle different template signatures if needed
+      if (templateType === 'leadFollowUp') {
+        emailContent = emailTemplates.leadFollowUp(
+          lead.customerName,
+          lead.productName,
+          user.name
+        );
+      } else if (templateType === 'leadWelcome') {
+        emailContent = emailTemplates.leadWelcome(
+          lead.customerName,
+          lead.productName
+        );
+      } else {
+        // If you add more templates, handle them here
+        return NextResponse.json({ message: 'Invalid template type' }, { status: 400 });
+      }
     } else {
       emailContent = {
         subject: customSubject || 'Message from Motor Tiger USA',
@@ -49,7 +70,7 @@ export async function POST(request: NextRequest) {
 
     // For demo purposes, we'll use a placeholder email
     // In production, you'd need the customer's email address
-    const customerEmail = lead.email || `${lead.customerName.toLowerCase().replace(/\s+/g, '.')}@example.com`;
+    const customerEmail = `${lead.customerName.toLowerCase().replace(/\s+/g, '.')}@example.com`;
 
     const result = await sendEmail({
       to: customerEmail,
@@ -68,9 +89,9 @@ export async function POST(request: NextRequest) {
       });
       await lead.save();
 
-      return NextResponse.json({ 
+      return NextResponse.json({
         message: 'Email sent successfully',
-        messageId: result.messageId 
+        messageId: result.messageId
       });
     } else {
       return NextResponse.json(
@@ -78,7 +99,7 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-  } catch (error:any) {
+  } catch (error) {
     console.error('Error sending email:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
