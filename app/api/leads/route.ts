@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
       .sort({ createdAt: -1 });
 
     return NextResponse.json(leads);
-  } catch (error:any) {
+  } catch (error) {
     console.error('Error fetching leads:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
@@ -82,6 +82,7 @@ export async function POST(request: NextRequest) {
     const newLead = new Lead({
       customerName: leadData.customerName,
       mobileNumber: leadData.mobileNumber,
+      email: leadData.email,
       productName: leadData.productName,
       productPrice: leadData.productPrice,
       salePrice: leadData.salePrice,

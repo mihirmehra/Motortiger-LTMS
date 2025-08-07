@@ -65,11 +65,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       });
       if (response.ok) {
         const data = await response.json();
-        setMainTarget(data.total || 0);
+        setMainTarget(data.remaining || 0);
       } else {
         console.error('Failed to fetch main target:', response.status, response.statusText);
       }
-    } catch (error:any) {
+    } catch (error) {
       console.error('Error fetching main target:', error);
     }
   };

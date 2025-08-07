@@ -47,11 +47,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       userId,
       {
         ...userData,
-        team: newTeam
+        team: newTeam === 'no-team' || newTeam === '' ? null : newTeam
       },
       { new: true, runValidators: true }
     ).select('-password')
-     .populate('createdBy', 'name email')
      .populate('team', 'name');
 
     // Update team memberships
@@ -74,7 +73,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     return NextResponse.json(updatedUser);
-  } catch (error:any) {
+  } catch (error) {
     console.error('Error updating user:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
@@ -128,7 +127,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     await User.findByIdAndDelete(userId);
 
     return NextResponse.json({ message: 'User deleted successfully' });
-  } catch (error:any) {
+  } catch (error) {
     console.error('Error deleting user:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     
     const total = targets.reduce((sum, target) => sum + target.amount, 0);
     const achieved = targets.reduce((sum, target) => sum + target.achieved, 0);
-    const remaining = total - achieved;
+    const remaining = Math.max(0, total - achieved);
     const percentage = total > 0 ? Math.round((achieved / total) * 100) : 0;
 
     const mainTarget = {
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       percentage
     };
     return NextResponse.json(mainTarget);
-  } catch (error:any) {
+  } catch (error) {
     console.error('Error fetching main target:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

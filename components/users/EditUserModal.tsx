@@ -21,14 +21,7 @@ interface User {
   email: string;
   role: 'admin' | 'manager' | 'agent';
   isActive: boolean;
-  team?: string;
-}
-
-interface EditUserModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: () => void;
-  user: User | null;
+  team?: { _id: string; name: string } | string | null;
 }
 
 interface EditUserModalProps {
@@ -39,16 +32,10 @@ interface EditUserModalProps {
 }
 
 export default function EditUserModal({ isOpen, onClose, onSuccess, user }: EditUserModalProps) {
-  const [formData, setFormData] = useState<{
-    name: string;
-    email: string;
-    role: 'admin' | 'manager' | 'agent';
-    isActive: boolean;
-    team: string;
-  }>({
+  const [formData, setFormData] = useState({
     name: '',
     email: '',
-    role: 'agent',
+    role: 'agent' as 'admin' | 'manager' | 'agent',
     isActive: true,
     team: ''
   });
@@ -63,13 +50,19 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user }: Edit
         email: user.email,
         role: user.role,
         isActive: user.isActive,
-        team: user.team || ''
+        team: typeof user.team === 'object' && user.team ? user.team._id : (user.team || 'no-team')
       });
-    }
-    if (isOpen) {
+      
+      // Fetch teams after setting form data
       fetchTeams();
     }
-  }, [user, isOpen]);
+  }, [user]);
+
+  useEffect(() => {
+    if (isOpen && !user) {
+      fetchTeams();
+    }
+  }, [isOpen, user]);
 
   const fetchTeams = async () => {
     try {
@@ -82,7 +75,7 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user }: Edit
         const data = await response.json();
         setTeams(data);
       }
-    } catch (error:any) {
+    } catch (error) {
       console.error('Error fetching teams:', error);
     }
   };
@@ -113,7 +106,7 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user }: Edit
         const data = await response.json();
         setError(data.message || 'Failed to update user');
       }
-    } catch (error:any) {
+    } catch (error) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

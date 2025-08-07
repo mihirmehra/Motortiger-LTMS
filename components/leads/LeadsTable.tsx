@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,6 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import EditLeadModal from './EditLeadModal';
 import SendEmailModal from './SendEmailModal';
 
@@ -62,12 +64,12 @@ export default function LeadsTable({
   const [userRole, setUserRole] = useState('');
   const [userId, setUserId] = useState('');
 
-  useState(() => {
+  useEffect(() => {
     const role = localStorage.getItem('user-role');
     const id = localStorage.getItem('user-id');
     setUserRole(role || '');
     setUserId(id || '');
-  });
+  }, []);
 
   const getStatusBadge = (status: string) => {
     const statusMap = {
@@ -143,7 +145,7 @@ export default function LeadsTable({
       } else {
         alert('Failed to delete lead');
       }
-    } catch (error:any) {
+    } catch (error) {
       alert('Error deleting lead');
     }
   };
@@ -186,6 +188,27 @@ export default function LeadsTable({
     onLeadUpdate();
     setIsEmailModalOpen(false);
     setEmailLead(null);
+  };
+
+  const handleStatusChange = async (leadId: string, newStatus: string) => {
+    try {
+      const response = await fetch(`/api/leads/${leadId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth-token')}`
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (response.ok) {
+        onLeadUpdate();
+      } else {
+        alert('Failed to update lead status');
+      }
+    } catch (error) {
+      alert('Error updating lead status');
+    }
   };
 
   if (isLoading) {
@@ -301,7 +324,26 @@ export default function LeadsTable({
                       ) : '-'}
                     </TableCell>
                     <TableCell>{lead.source || '-'}</TableCell>
-                    <TableCell>{getStatusBadge(lead.status)}</TableCell>
+                    <TableCell>
+                      {canEditLead(lead) ? (
+                        <Select 
+                          value={lead.status} 
+                          onValueChange={(value) => handleStatusChange(lead._id, value)}
+                        >
+                          <SelectTrigger className="w-32">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="new">🆕 New</SelectItem>
+                            <SelectItem value="in-progress">⏳ In Progress</SelectItem>
+                            <SelectItem value="sold">✅ Sold</SelectItem>
+                            <SelectItem value="lost">❌ Lost</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        getStatusBadge(lead.status)
+                      )}
+                    </TableCell>
                     <TableCell>
                       {lead.assignedTo && typeof lead.assignedTo === 'object' && lead.assignedTo.name 
                         ? lead.assignedTo.name 

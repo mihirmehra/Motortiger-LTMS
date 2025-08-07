@@ -60,7 +60,7 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         const data = await response.json();
         setUsers(data);
       }
-    } catch (error:any) {
+    } catch (error) {
       console.error('Error fetching users:', error);
     }
   };
@@ -102,7 +102,7 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         const data = await response.json();
         setError(data.message || 'Failed to create lead');
       }
-    } catch (error:any) {
+    } catch (error) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);
@@ -331,11 +331,14 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-yellow-800">Estimated Profit Margin:</span>
                 <span className={`text-lg font-bold ${
-                  (parseFloat(formData.salePrice) - parseFloat(formData.productPrice)) > 0 
+                  (!isNaN(parseFloat(formData.salePrice)) && !isNaN(parseFloat(formData.productPrice)) && 
+                   (parseFloat(formData.salePrice) - parseFloat(formData.productPrice)) > 0)
                     ? 'text-green-600' 
                     : 'text-red-600'
                 }`}>
-                  ${(parseFloat(formData.salePrice) - parseFloat(formData.productPrice)).toFixed(2)}
+                  ${(!isNaN(parseFloat(formData.salePrice)) && !isNaN(parseFloat(formData.productPrice)) 
+                    ? (parseFloat(formData.salePrice) - parseFloat(formData.productPrice)).toFixed(2)
+                    : '0.00')}
                 </span>
               </div>
             </div>

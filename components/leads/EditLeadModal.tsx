@@ -43,7 +43,7 @@ export default function EditLeadModal({ isOpen, onClose, onSuccess, lead }: Edit
     productPrice: '',
     salePrice: '',
     source: '',
-    status: 'new' as Lead['status'],
+    status: 'new' as 'new' | 'in-progress' | 'sold' | 'lost',
     assignedTo: ''
   });
   const [users, setUsers] = useState<Array<{ _id: string; name: string; email: string }>>([]);
@@ -65,14 +65,19 @@ export default function EditLeadModal({ isOpen, onClose, onSuccess, lead }: Edit
         salePrice: lead.salePrice?.toString() || '',
         source: lead.source || '',
         status: lead.status,
-        assignedTo: typeof lead.assignedTo === 'object' ? lead.assignedTo._id : (lead.assignedTo || 'unassigned')
+        assignedTo: typeof lead.assignedTo === 'object' && lead.assignedTo ? lead.assignedTo._id : (lead.assignedTo || 'unassigned')
       });
-    }
-    
-    if (isOpen) {
+      
+      // Fetch users after setting form data
       fetchUsers();
     }
-  }, [lead, isOpen]);
+  }, [lead]);
+
+  useEffect(() => {
+    if (isOpen && !lead) {
+      fetchUsers();
+    }
+  }, [isOpen, lead]);
 
   const fetchUsers = async () => {
     try {
@@ -85,7 +90,7 @@ export default function EditLeadModal({ isOpen, onClose, onSuccess, lead }: Edit
         const data = await response.json();
         setUsers(data);
       }
-    } catch (error:any) {
+    } catch (error) {
       console.error('Error fetching users:', error);
     }
   };
@@ -118,7 +123,7 @@ export default function EditLeadModal({ isOpen, onClose, onSuccess, lead }: Edit
         const data = await response.json();
         setError(data.message || 'Failed to update lead');
       }
-    } catch (error:any) {
+    } catch (error) {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

@@ -98,10 +98,27 @@ const leadSchema = new mongoose.Schema({
 
 // Calculate profit margin when sale price is set
 leadSchema.pre('save', function(next) {
-  if (this.salePrice && this.productPrice) {
-    this.profitMargin = this.salePrice - this.productPrice;
-  } else {
+  // Only calculate profit margin if both prices are provided and valid
+  if (this.salePrice && this.productPrice && 
+      !isNaN(this.salePrice) && !isNaN(this.productPrice)) {
+    this.profitMargin = Number((this.salePrice - this.productPrice).toFixed(2));
+  } else if (this.salePrice || this.productPrice) {
+    // If only one price is provided, set profit margin to 0
     this.profitMargin = 0;
+  }
+  // If neither price is provided, leave profitMargin as is (could be manually set)
+  next();
+});
+
+// Validation for sold leads
+leadSchema.pre('save', function(next) {
+  if (this.status === 'sold') {
+    if (!this.salePrice || this.salePrice <= 0) {
+      return next(new Error('Sale price is required and must be greater than 0 for sold leads'));
+    }
+    if (!this.productPrice || this.productPrice <= 0) {
+      return next(new Error('Product price is required and must be greater than 0 for sold leads'));
+    }
   }
   next();
 });
