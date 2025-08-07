@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   try {
     await connectDB();
     
-    let query = { isActive: true }; // Only fetch active users
+    let query: any = { isActive: true }; // Only fetch active users
     
     // Managers can only see users they created (agents)
     if (user.role === 'manager') {
