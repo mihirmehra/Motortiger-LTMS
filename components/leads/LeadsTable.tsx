@@ -20,6 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import EditLeadModal from './EditLeadModal';
 import SendEmailModal from './SendEmailModal';
@@ -141,12 +142,13 @@ export default function LeadsTable({
       });
 
       if (response.ok) {
+        toast.success('Lead deleted successfully');
         onLeadUpdate();
       } else {
-        alert('Failed to delete lead');
+        toast.error('Failed to delete lead');
       }
     } catch (error) {
-      alert('Error deleting lead');
+      toast.error('Error deleting lead');
     }
   };
 
@@ -202,12 +204,13 @@ export default function LeadsTable({
       });
 
       if (response.ok) {
+        toast.success('Lead status updated');
         onLeadUpdate();
       } else {
-        alert('Failed to update lead status');
+        toast.error('Failed to update lead status');
       }
     } catch (error) {
-      alert('Error updating lead status');
+      toast.error('Error updating lead status');
     }
   };
 

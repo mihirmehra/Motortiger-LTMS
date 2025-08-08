@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { Toaster } from '@/components/ui/sonner';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -43,6 +44,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             {children}
           </div>
         </main>
+        <Toaster />
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { toast } from 'sonner';
 
 interface Lead {
   _id: string;
@@ -48,7 +49,6 @@ export default function EditLeadModal({ isOpen, onClose, onSuccess, lead }: Edit
   });
   const [users, setUsers] = useState<Array<{ _id: string; name: string; email: string }>>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
   const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
@@ -100,7 +100,6 @@ export default function EditLeadModal({ isOpen, onClose, onSuccess, lead }: Edit
     if (!lead) return;
     
     setIsLoading(true);
-    setError('');
 
     try {
       const response = await fetch(`/api/leads/${lead._id}`, {
@@ -118,13 +117,14 @@ export default function EditLeadModal({ isOpen, onClose, onSuccess, lead }: Edit
       });
 
       if (response.ok) {
+        toast.success('Lead updated successfully');
         onSuccess();
       } else {
         const data = await response.json();
-        setError(data.message || 'Failed to update lead');
+        toast.error(data.message || 'Failed to update lead');
       }
     } catch (error) {
-      setError('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -256,12 +256,6 @@ export default function EditLeadModal({ isOpen, onClose, onSuccess, lead }: Edit
               </div>
             )}
           </div>
-
-          {error && (
-            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-              {error}
-            </div>
-          )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>

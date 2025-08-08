@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { toast } from 'sonner';
 import { Upload, FileText, AlertCircle } from 'lucide-react';
 
 interface ImportLeadsModalProps {
@@ -23,7 +24,6 @@ interface ImportLeadsModalProps {
 export default function ImportLeadsModal({ isOpen, onClose, onSuccess }: ImportLeadsModalProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
   const [importResults, setImportResults] = useState<{
     success: number;
     failed: number;
@@ -55,12 +55,11 @@ export default function ImportLeadsModal({ isOpen, onClose, onSuccess }: ImportL
 
   const handlePreview = async () => {
     if (!selectedFile) {
-      setError('Please select a file to preview');
+      toast.error('Please select a file to preview');
       return;
     }
 
     setIsLoading(true);
-    setError('');
 
     try {
       const formData = new FormData();
@@ -80,11 +79,12 @@ export default function ImportLeadsModal({ isOpen, onClose, onSuccess }: ImportL
       if (response.ok) {
         setPreviewData(data.preview || []);
         setShowPreview(true);
+        toast.success('Preview generated successfully');
       } else {
-        setError(data.message || 'Preview failed');
+        toast.error(data.message || 'Preview failed');
       }
     } catch (error:any) {
-      setError('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -92,12 +92,11 @@ export default function ImportLeadsModal({ isOpen, onClose, onSuccess }: ImportL
 
   const handleImport = async () => {
     if (!selectedFile) {
-      setError('Please select a file to import');
+      toast.error('Please select a file to import');
       return;
     }
 
     setIsLoading(true);
-    setError('');
 
     try {
       const formData = new FormData();
@@ -116,13 +115,17 @@ export default function ImportLeadsModal({ isOpen, onClose, onSuccess }: ImportL
       if (response.ok) {
         setImportResults(data);
         if (data.success > 0) {
+          toast.success(`${data.success} leads imported successfully`);
           onSuccess();
         }
+        if (data.failed > 0) {
+          toast.warning(`${data.failed} leads failed to import`);
+        }
       } else {
-        setError(data.message || 'Import failed');
+        toast.error(data.message || 'Import failed');
       }
     } catch (error:any) {
-      setError('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -272,11 +275,6 @@ Jane Smith,+1-555-987-6543,Transmission,1800,2200,Referral,in-progress`;
             </div>
           )}
 
-          {error && (
-            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-              {error}
-            </div>
-          )}
         </div>
 
         <DialogFooter>

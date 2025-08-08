@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { toast } from 'sonner';
 import { UserPlus, UserMinus } from 'lucide-react';
 
 interface Team {
@@ -37,7 +38,6 @@ export default function ManageTeamMembersModal({ isOpen, onClose, onSuccess, tea
   const [availableUsers, setAvailableUsers] = useState<Array<{ _id: string; name: string; email: string; role: string }>>([]);
   const [selectedUser, setSelectedUser] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     if (isOpen && team) {
@@ -70,7 +70,6 @@ export default function ManageTeamMembersModal({ isOpen, onClose, onSuccess, tea
     if (!selectedUser || !team) return;
     
     setIsLoading(true);
-    setError('');
 
     try {
       const updatedMembers = [...team.members.map(m => m._id), selectedUser];
@@ -88,15 +87,16 @@ export default function ManageTeamMembersModal({ isOpen, onClose, onSuccess, tea
       });
 
       if (response.ok) {
+        toast.success('Member added successfully');
         onSuccess();
         setSelectedUser('');
         fetchAvailableUsers();
       } else {
         const data = await response.json();
-        setError(data.message || 'Failed to add member');
+        toast.error(data.message || 'Failed to add member');
       }
     } catch (error:any) {
-      setError('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -106,7 +106,6 @@ export default function ManageTeamMembersModal({ isOpen, onClose, onSuccess, tea
     if (!team) return;
     
     setIsLoading(true);
-    setError('');
 
     try {
       const updatedMembers = team.members.filter(m => m._id !== memberId).map(m => m._id);
@@ -124,14 +123,15 @@ export default function ManageTeamMembersModal({ isOpen, onClose, onSuccess, tea
       });
 
       if (response.ok) {
+        toast.success('Member removed successfully');
         onSuccess();
         fetchAvailableUsers();
       } else {
         const data = await response.json();
-        setError(data.message || 'Failed to remove member');
+        toast.error(data.message || 'Failed to remove member');
       }
     } catch (error:any) {
-      setError('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -210,11 +210,6 @@ export default function ManageTeamMembersModal({ isOpen, onClose, onSuccess, tea
             )}
           </div>
 
-          {error && (
-            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-              {error}
-            </div>
-          )}
         </div>
 
         <DialogFooter>

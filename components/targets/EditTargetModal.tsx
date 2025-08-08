@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { toast } from 'sonner';
 
 interface Target {
   _id: string;
@@ -37,7 +38,6 @@ export default function EditTargetModal({ isOpen, onClose, onSuccess, target }: 
     description: ''
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     if (target) {
@@ -55,7 +55,6 @@ export default function EditTargetModal({ isOpen, onClose, onSuccess, target }: 
     if (!target) return;
     
     setIsLoading(true);
-    setError('');
 
     try {
       const response = await fetch(`/api/targets/${target._id}`, {
@@ -73,14 +72,15 @@ export default function EditTargetModal({ isOpen, onClose, onSuccess, target }: 
       });
 
       if (response.ok) {
+        toast.success('Target updated successfully');
         onSuccess();
         onClose();
       } else {
         const data = await response.json();
-        setError(data.message || 'Failed to update target');
+        toast.error(data.message || 'Failed to update target');
       }
     } catch (error:any) {
-      setError('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -150,12 +150,6 @@ export default function EditTargetModal({ isOpen, onClose, onSuccess, target }: 
               rows={3}
             />
           </div>
-
-          {error && (
-            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-              {error}
-            </div>
-          )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>

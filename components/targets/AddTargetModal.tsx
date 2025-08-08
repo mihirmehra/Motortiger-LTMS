@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { toast } from 'sonner';
 
 interface AddTargetModalProps {
   isOpen: boolean;
@@ -27,12 +28,10 @@ export default function AddTargetModal({ isOpen, onClose, onSuccess }: AddTarget
     description: ''
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
 
     try {
       const response = await fetch('/api/targets', {
@@ -49,6 +48,7 @@ export default function AddTargetModal({ isOpen, onClose, onSuccess }: AddTarget
       });
 
       if (response.ok) {
+        toast.success('Target created successfully');
         onSuccess();
         setFormData({
           date: new Date().toISOString().split('T')[0],
@@ -57,10 +57,10 @@ export default function AddTargetModal({ isOpen, onClose, onSuccess }: AddTarget
         });
       } else {
         const data = await response.json();
-        setError(data.message || 'Failed to create target');
+        toast.error(data.message || 'Failed to create target');
       }
     } catch (error:any) {
-      setError('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -116,12 +116,6 @@ export default function AddTargetModal({ isOpen, onClose, onSuccess }: AddTarget
               rows={3}
             />
           </div>
-
-          {error && (
-            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-              {error}
-            </div>
-          )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
